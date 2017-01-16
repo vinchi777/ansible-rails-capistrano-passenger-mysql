@@ -1,0 +1,13 @@
+[production]
+192.254.222.130
+
+[development]
+192.168.33.10
+
+[production:vars]
+ansible_ssh_user=root
+ansible_ssh_pass=kgNjJOOpP4zN
+
+[development:vars]
+ansible_ssh_user=root
+ansible_ssh_pass=vagrant

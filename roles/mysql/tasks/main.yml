@@ -1,0 +1,34 @@
+---
+- name: Install mysql
+  yum: name=mysql-server state=present
+
+- name: Ensure mysql is started
+  service: name=mysql state=started
+  become_user: root
+  become: yes
+
+#- name: Install the Python MySQLB module
+  #yum: name=MySQL-python state=present
+  #become_user: root
+  #become: yes
+
+- name: Install the MySQL-python module
+  shell: easy_install mysql-python
+  become_user: root
+  become: yes
+
+- name: Create homeinspector Database
+  become: yes
+  become_user: root
+  mysql_db:
+    name: homeinspector_production
+    state: present
+
+- name: Create db user
+  become: yes
+  become_user: root
+  mysql_user:
+    name: homeinspector
+    password: password
+    priv: '*.*:ALL'
+    state: present

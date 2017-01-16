@@ -1,0 +1,22 @@
+---
+- hosts: production
+  remote_user: root
+  gather_facts: yes
+  vars:
+    username: deploy
+    password: 12XNKfSxl31U2
+    public_key: ~/.ssh/id_rsa.pub
+    ruby_ver: 2.3.3
+  roles:
+    - role: common
+      become: yes
+    - role: mysql
+      become_user: "{{ username }}"
+      become: yes
+    - role: rvm
+      become_user: "{{ username }}"
+      become: yes
+    - role: passenger
+      become_user: "{{ username }}"
+      become: yes
+

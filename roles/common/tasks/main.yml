@@ -1,0 +1,61 @@
+---
+- name: Update packages for the first time
+  become: yes
+  shell: yum update
+
+- name: Install libselinux-python
+  yum: name=libselinux-python state=present
+  become: yes
+
+- name: Create user
+  user: name={{ username }} password={{ password }}
+
+- name: Make sure we have 'wheel' group
+  group: name=wheel state=present
+
+- name: Allow wheel to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+
+- name: Add user to wheel group
+  user: name={{ username }} groups=wheel append=yes state=present
+
+- name: Install epel
+  yum: name=epel-release state=present
+
+- name: Install packages
+  yum: name={{ item }} state=present
+  with_items:
+    - fail2ban
+    - git-core
+    - zlib
+    - zlib-devel
+    - gcc-c++
+    - patch
+    - readline
+    - readline-devel
+    - libyaml-devel
+    - libffi-devel
+    - openssl-devel
+    - make
+    - bzip2
+    - autoconf
+    - automake
+    - libtool
+    - bison
+    - curl
+    - mysql-devel
+    - sqlite-devel
+    - libselinux-python
+    - python-devel
+    - curl-devel
+    - redhat-rpm-config
+
+- name: install nodejs
+  shell: yum -y install nodejs npm --enablerepo=epel
+  become: yes
+
+

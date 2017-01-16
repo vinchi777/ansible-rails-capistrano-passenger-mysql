@@ -1,0 +1,38 @@
+---
+- name: Install Passenger gem {{ ruby_ver }} for {{ username }}
+  command: bash -lc "gem install passenger"
+
+- name: Install bundler gem
+  command: bash -lc "gem install bundler"
+
+- name: Install and compile nginx
+  become: yes
+  become_method: su
+  command: bash -lc "rvmsudo passenger-install-nginx-module --auto --auto-download --extra-configure-flags=none --languages ruby"
+  args:
+    creates: /opt/nginx/conf/nginx.conf
+
+- name: Creating The Nginx Management Script
+  become: yes
+  become_user: root
+  copy: 
+    src: nginx
+    dest: /etc/rc.d/init.d/nginx
+    owner: root
+    group: root
+    mode: "u+x,g=rx,o=x"
+
+- name: Add new nginx config file
+  become: yes
+  become_user: root
+  template:
+    src: nginx.conf
+    dest: /opt/nginx/conf/nginx.conf
+    owner: root
+    group: root
+    mode: 0775
+  notify:
+    - restart nginx
+
+
+

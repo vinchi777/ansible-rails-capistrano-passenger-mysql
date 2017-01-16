@@ -1,0 +1,16 @@
+---
+- name: get rvm keys
+  command: gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+
+- name: curl rvm
+  get_url: url=https://get.rvm.io dest=/tmp/rvm.sh
+
+- name: install rvm and ruby
+  command: bash /tmp/rvm.sh stable 
+
+- name: install ruby {{ ruby_ver | default('2.3.3') }}
+  command: /home/{{ username }}/.rvm/bin/rvm install {{ ruby_ver | default('2.3.3') }}
+
+- name: rvm use {{ ruby_ver | default('2.1.1') }}
+  command: /home/{{ username }}/.rvm/bin/rvm alias create default {{ ruby_ver }}
+
